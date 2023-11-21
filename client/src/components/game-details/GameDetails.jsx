@@ -1,44 +1,45 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import * as gameService from '../../services/GameService.js';
-import * as commentService from '../../services/commentService.js'
+import * as gameService from "../../services/GameService.js";
+import * as commentService from "../../services/commentService.js";
+import AuthContext from "../../contexts/authContext.js";
 
 export default function GameDetails() {
+    const { email } = useContext(AuthContext);
     const [game, setGame] = useState({});
     const [comments, setComments] = useState([]);
     const { gameId } = useParams();
 
     useEffect(() => {
         gameService.getOne(gameId)
-        .then(setGame);
+            .then(setGame);
 
         commentService.getAll(gameId)
-        .then(setComments);
+            .then(setComments);
     }, [gameId]);
 
     const addCommentHandler = async (e) => {
-        //add input
         e.preventDefault();
+
         const formData = new FormData(e.currentTarget);
 
         const newComment = await commentService.create(
             gameId,
-            formData.get('username'),
-            formData.get('comment'));
+            formData.get('comment')
+        );
 
-            setComments(state => [...state, newComment]);
+        setComments(state => [...state, { ...newComment, author: { email } }]);
     }
 
     return (
         <section id="game-details">
             <h1>Game Details</h1>
             <div className="info-section">
-
                 <div className="game-header">
-                    <img className="game-img" src={game.imageUrl} alt={game.title}/>
+                    <img className="game-img" src={game.imageUrl} alt={game.title} />
                     <h1>{game.title}</h1>
-                    <span className="levels">MaxLevel: {game.maxlevel}</span>
+                    <span className="levels">MaxLevel: {game.maxLevel}</span>
                     <p className="type">{game.category}</p>
                 </div>
 
@@ -47,15 +48,16 @@ export default function GameDetails() {
                 <div className="details-comments">
                     <h2>Comments:</h2>
                     <ul>
-                        {comments.map(({_id, username, text}) => (
+                        {comments.map(({ _id, text, owner: { email } }) => (
                             <li key={_id} className="comment">
-                                <p>{username}: {text}</p>
+                                <p>{email}: {text}</p>
                             </li>
                         ))}
-
                     </ul>
 
-                    {comments.length === 0 && <p className="no-comment">No comments.</p>}
+                    {comments.length === 0 && (
+                        <p className="no-comment">No comments.</p>
+                    )}
                 </div>
 
                 {/* <!-- Edit/Delete buttons ( Only for creator of this game )  -->
@@ -68,12 +70,10 @@ export default function GameDetails() {
             <article className="create-comment">
                 <label>Add new comment:</label>
                 <form className="form" onSubmit={addCommentHandler}>
-                    <input type="text" name="username" placeholder="username" />
                     <textarea name="comment" placeholder="Comment......"></textarea>
                     <input className="btn submit" type="submit" value="Add Comment" />
                 </form>
             </article>
-
         </section>
-    )
+    );
 }

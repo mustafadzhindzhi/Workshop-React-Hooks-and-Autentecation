@@ -2,7 +2,7 @@ import * as request from "../lib/request.js";
 
 //gameData === names
 
-const baseUrl = 'http://localhost:3030/jsonstore/games';
+const baseUrl = 'http://localhost:3030/data/games';
 
 //all games - add new folder lib
 export const getAll = async () => {
