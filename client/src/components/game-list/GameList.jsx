@@ -7,7 +7,11 @@ export default function GameList() {
   const [games, setGames] = useState([]);
   //load all games
   useEffect(() => {
-    gameServise.getAll().then((result) => setGames(result));
+    gameServise.getAll()
+    .then((result) => setGames(result))
+    .catch(err => {
+      console.log(err);
+    }) 
   }, []);
 
   console.log(games);

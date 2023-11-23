@@ -23,3 +23,10 @@ export const create = async (gameData) => {
 
     return result;
 };
+
+//edit
+export const edit = async (gameId, gameData) => {
+    const result = await request.put(`${baseUrl}/${gameId}`, gameData);
+
+    return result;
+};

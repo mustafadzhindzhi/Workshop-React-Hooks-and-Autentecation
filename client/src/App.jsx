@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
-import * as authService from "../src/services/authService.js";
 import {AuthProvider} from "./contexts/authContext.jsx";
 import Path from "./paths.js";
 
@@ -13,49 +11,12 @@ import Login from "./components/login/Login.jsx";
 import Logout from "./components/logout/Logout.jsx";
 import Register from "./components/register/Register.jsx";
 import GameDetails from "./components/game-details/GameDetails.jsx";
+import GameEdit from "./components/game-edit/GameEdit.jsx";
 
 function App() {
-  const navigate= useNavigate();
-  const [auth, setAuth] = useState(() => {
-    localStorage.removeItem('accessToken');
-
-    return {};
-  });
-
-  const loginSubmitHandler = async (values) => {
-    const result = await authService.login(values.email, values.password);
-
-    setAuth(result);
-    localStorage.setItem('accessToken', result.accessToken); 
-
-    navigate(Path.Home);
-  };
-
-  const registerSubmitHandler = async(values) => {
-    const result = await authService.register(values.email, values.password);
-
-    setAuth(result);
-    localStorage.setItem('accessToken', result.accessToken); 
-
-    navigate(Path.Home);
-  };
-
-  const logoutHandler = () => {
-    setAuth({});
-    localStorage.removeItem('accessToken');
-  }
-
-  const values = {
-    loginSubmitHandler,
-    registerSubmitHandler,
-    logoutHandler,
-    username: auth.username || auth.email,
-    email: auth.email,
-    isAuthenticated: !!auth.accessToken
-  }
 
   return (
-    <AuthProvider value={values}>
+    <AuthProvider>
       <div id="box">
         <Header />
         <Routes>
@@ -65,6 +26,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/games/:gameId" element={<GameDetails />} />
+          <Route path={Path.GameEdit} element={<GameEdit />} />
           <Route path={Path.Logout} element={<Logout />} />
         </Routes>
       </div>

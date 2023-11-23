@@ -4,7 +4,7 @@ import AuthContext from "../../contexts/authContext.jsx";
 
 const loginFormKeys = {
   Email: "email",
-  Password: "password",
+  Password: "password", //name
 };
 
 export default function Login() {
