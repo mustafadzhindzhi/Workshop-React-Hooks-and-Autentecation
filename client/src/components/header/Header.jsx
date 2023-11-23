@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { Link } from "react-router-dom" // сменяме всички <а с Link и всички href ги сменяме с to
-import AuthContext from "../../contexts/authContext.js"
+import AuthContext from "../../contexts/authContext.jsx"
 
 export default function Header() { 
     const {
