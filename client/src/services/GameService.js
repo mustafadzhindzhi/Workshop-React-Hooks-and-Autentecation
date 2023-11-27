@@ -30,3 +30,19 @@ export const edit = async (gameId, gameData) => {
 
     return result;
 };
+
+//delete
+export const remove = async(gameId) => request.remove(`${baseUrl}/${gameId}`)
+
+//getLatest
+export const getLatest = async () => {
+    const query = new URLSearchParams({
+        // sortBy: `_createdOn desc`, //this doesn't work
+        offset: 0, // from the beginning,
+        pageSize: 3
+    });
+
+    const result = await request.get(`${baseUrl}?${query}`);
+
+    return result;
+}

@@ -1,10 +1,18 @@
-import withAuth from "../../HOC/withAuth.jsx"
+import { useEffect, useState } from "react";
+import withAuth from "../../HOC/withAuth.jsx";
+import * as gameService from '../../services/GameService.js'
+import LatestGame from "../latest-game/LatestGame.jsx";
 
 function Home ({
     _id,
     accessToken, 
     email,
 }) {
+    const [latestGame, setLatestGame] = useState([]);
+    useEffect(() => {
+        gameService.getLatest()
+        .then(result => setLatestGame(result));
+    }, [])
     return (
         <section id="welcome-world">
 
@@ -17,44 +25,9 @@ function Home ({
         <div id="home-page">
             <h1>Latest Games</h1>
 
-            <div className="game">
-                <div className="image-wrap">
-                    <img src="./images/CoverFire.png" />
-                </div>
-                <h3>Cover Fire</h3>
-                <div className="rating">
-                    <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
-                </div>
-                <div className="data-buttons">
-                    <a href="#" className="btn details-btn">Details</a>
-                </div>
-            </div>
-            <div className="game">
-                <div className="image-wrap">
-                    <img src="./images/ZombieLang.png" />
-                </div>
-                <h3>Zombie Lang</h3>
-                <div className="rating">
-                    <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
-                </div>
-                <div className="data-buttons">
-                    <a href="#" className="btn details-btn">Details</a>
-                </div>
-            </div>
-            <div className="game">
-                <div className="image-wrap">
-                    <img src="./images/MineCraft.png" />
-                </div>
-                <h3>MineCraft</h3>
-                <div className="rating">
-                    <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
-                </div>
-                <div className="data-buttons">
-                    <a href="#" className="btn details-btn">Details</a>
-                </div>
-            </div>
+            {latestGame.map(game => <LatestGame {...game} />)}
 
-            <p className="no-articles">No games yet</p>
+            {!latestGame.length && <p className="no-articles">No games yet</p>}
             <p>{email}</p>
         </div>
     </section>

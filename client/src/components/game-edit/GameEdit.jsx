@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 
 import * as gameService from "../../services/GameService.js";
-import useForm from "../../hooks/useForm.js";
 import { useEffect, useState } from "react";
 
 export default function GameEdit() {
@@ -22,7 +21,11 @@ export default function GameEdit() {
     });
   }, [gameId]);
 
-  const editGameSubtmiHandler = async (values) => {
+  const editGameSubtmiHandler = async (e) => {
+    e.preventDefault();
+
+    const values = Object.fromEntries(new FormData(e.currentTarget));
+
     try {
       await gameService.edit(gameId, values);
       //add json to data folder; use Postman
@@ -33,11 +36,16 @@ export default function GameEdit() {
     }
   };
 
-  const { values, onChange, onSubmit } = useForm(editGameSubtmiHandler, game);
+const onChange = (e) => {
+  setGame(state => ({
+    ...state,
+    [e.target.name]: e.target.value
+  }));
+}
 
   return (
     <section id="create-page" className="auth">
-      <form id="create" onSubmit={onSubmit}>
+      <form id="create" onSubmit={editGameSubtmiHandler}>
         <div className="container">
           <h1>Create Game</h1>
           <label htmlFor="leg-title">Legendary title:</label>
@@ -45,7 +53,7 @@ export default function GameEdit() {
             type="text"
             id="title"
             name="title"
-            value={values.title}
+            value={game.title}
             onChange={onChange}
             placeholder="Enter game title..."
           />
@@ -55,7 +63,7 @@ export default function GameEdit() {
             type="text"
             id="category"
             name="category"
-            value={values.category}
+            value={game.category}
             onChange={onChange}
             placeholder="Enter game category..."
           />
@@ -66,7 +74,7 @@ export default function GameEdit() {
             id="maxLevel"
             name="maxLevel"
             min="1"
-            value={values.maxLevel}
+            value={game.maxLevel}
             onChange={onChange}
             placeholder="1"
           />
@@ -76,13 +84,13 @@ export default function GameEdit() {
             type="text"
             id="imageUrl"
             name="imageUrl"
-            value={values.imageUrl}
+            value={game.imageUrl}
             onChange={onChange}
             placeholder="Upload a photo..."
           />
 
           <label htmlFor="summary">Summary:</label>
-          <textarea name="summary" value={values.summary} onChange={onChange} id="summary"></textarea>
+          <textarea name="summary" id="summary" value={game.summary} onChange={onChange}></textarea>
           <input className="btn submit" type="submit" value="Edit Game" />
         </div>
       </form>
