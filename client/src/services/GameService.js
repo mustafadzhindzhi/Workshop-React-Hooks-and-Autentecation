@@ -36,11 +36,13 @@ export const remove = async(gameId) => request.remove(`${baseUrl}/${gameId}`)
 
 //getLatest
 export const getLatest = async () => {
-    const query = new URLSearchParams({
-        // sortBy: `_createdOn desc`, //this doesn't work
-        offset: 0, // from the beginning,
-        pageSize: 3
-    });
+    // const query = new URLSearchParams({
+    //     // sortBy: `_createdOn desc`, //this doesn't work
+    //     offset: 0, // from the beginning,
+    //     pageSize: 3
+    // });
+
+    const query = encodeURIComponent(`sortBy=_createdOn asc&offset=0&pageSize=3`)
 
     const result = await request.get(`${baseUrl}?${query}`);
 
