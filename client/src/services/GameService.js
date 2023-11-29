@@ -42,9 +42,11 @@ export const getLatest = async () => {
     //     pageSize: 3
     // });
 
-    const query = encodeURIComponent(`sortBy=_createdOn asc&offset=0&pageSize=3`)
 
-    const result = await request.get(`${baseUrl}?${query}`);
+
+    const query = encodeURIComponent(`offset=0&pageSize=3`)
+
+    const result = await request.get(`${baseUrl}?sortBy=_createdOn%20desc&${query}`);
 
     return result;
 }
